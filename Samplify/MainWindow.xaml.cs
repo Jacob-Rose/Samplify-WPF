@@ -8,62 +8,58 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using WaveFormRendererLib;
 
 namespace Samplify
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// MainWindow
     /// </summary>
     public partial class MainWindow : Window
     {
-        SampleReference[] allSamples;
-        List<SampleReference> currentSamples = new List<SampleReference>();
+        SampleReference[] allSamples; //all valid samples in 
+        List<SampleReference> currentSamples = new List<SampleReference>(); //samples that are currently shown in the listview
         List<string> directories = new List<string>() {  };
         public MainWindow()
         {
+            setupUserPreferences(); //setup colors of UI
             InitializeComponent();
-            setupDirectories();
-            setupUserPreferences();
-            updateAllSamples();
-            UpdateCurrentSamples("");
-            sampleListView.ItemsSource = currentSamples;
+            setupDirectories(); 
+            
+            
+            sampleListView.ItemsSource = currentSamples; 
             resetTreeView();
             
         }
 
+        /// <summary>
+        /// Setup colors of the UI
+        /// </summary>
         public void setupUserPreferences()
         {
-            UserPreferences.defaultSampleColor = Brushes.Crimson; //color of lines drawn
+            //UserPreferences.defaultSampleColor = Brushes.AliceBlue; //color of lines drawn
         }
 
+        /// <summary>
+        /// Loads in directory information from registry
+        /// </summary>
         public void setupDirectories()
         {
             RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Newrose\Samplify");
-
-            string[] directoryArray = (string[])NewroseLib.StringToObject((string)key.GetValue("Directories"));
             if(key != null)
             {
-                var dirsToAdd = NewroseLib.StringToObject((string)key.GetValue("Directories"));
-                if ((dirsToAdd as string[]).Length > 0)
-                {
-                    directories.AddRange(dirsToAdd as string[]);
-                }
+                object dirs = NewroseLib.loadObjectFromRegistry(key, "Directories");
+                directories.AddRange(dirs as string[]);
             }
             if(directories.Count == 0)
             {
-                string dir = userSelectDirectoryDialog();
+                string dir = NewroseLib.userSelectDirectoryDialog();
                 if(dir != null)
                 {
                     directories.Add(dir);
@@ -72,120 +68,39 @@ namespace Samplify
 
         }
 
-        public static string userSelectDirectoryDialog()
-        {
-            CommonOpenFileDialog dF = new CommonOpenFileDialog();
-            dF.Title = "Directory Finder";
-            dF.IsFolderPicker = true;
-
-            dF.Multiselect = false;
-            dF.EnsureFileExists = true;
-            dF.EnsurePathExists = true;
-            dF.EnsureValidNames = true;
-            dF.AllowNonFileSystemItems = false;
-            dF.AddToMostRecentlyUsedList = false;
-
-            if (dF.ShowDialog() == CommonFileDialogResult.Ok) //simple window dialog with a textbox to copy the path into
-            {
-                string userDirectory = dF.FileName;
-                if (Directory.Exists(userDirectory))
-                {
-                    return userDirectory;
-                }
-
-            }
-            return null;
-        }
+        /// <summary>
+        /// Saves the directory array to registry
+        /// </summary>
         public void saveDirectories()
         {
             RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Newrose\Samplify");
-            key.SetValue("Directories", NewroseLib.ObjectToString(directories.ToArray()));
+            NewroseLib.SaveObjectToRegistry(key, "Directories", directories.ToArray());
         }
 
-        public SampleReference[] updateAllSamples(string[] directories)
+        /// <summary>
+        /// Creates all sample objects from the directories in the directories array
+        /// </summary>
+        public async void updateAllSamples()
         {
-            List<SampleReference> samples = new List<SampleReference>();
-            foreach(string dir in directories)
-            {
-                samples.AddRange(updateAllSamples(dir));
-            }
-            return samples.ToArray();
-        }
-        public SampleReference[] updateAllSamples(string directory)
-        {
-            LoadingWindow loadingWindow = new LoadingWindow();
-            loadingWindow.Show();
-            int count = 0;
-
-            List<SampleReference> samples = new List<SampleReference>();
-            
-            string[] files = Directory.GetFiles(directory, "*.wav", SearchOption.AllDirectories);
-            loadingWindow.progressBar.Maximum = files.Length;
-            foreach (string file in files)
-            {
-                FileInfo fileInfo = new FileInfo(file);
-                string sampFile = string.Concat(file, ".samp");
-                count++;
-                IFormatter formatter = new BinaryFormatter();
-                if(File.Exists(sampFile))
-                {
-                    StreamReader reader = new StreamReader(sampFile);
-                    SampleInfo sampInfo = (SampleInfo)formatter.Deserialize(reader.BaseStream);
-                    if (sampInfo.fileSize == fileInfo.Length) //cheap way to verify file hasnt been modified, but not best method
-                    {
-                        SampleReference sample = new SampleReference(file, sampInfo.peakInfo);
-                        samples.Add(sample);
-                    }
-                }
-                else
-                {
-                    if (checkValidity(file))
-                    {
-                        SampleReference sample = new SampleReference(file);
-                        //loadingWindow.loadingInfoTextBlock.Text = file;
-                        //loadingWindow.progressBar.Value = count;
-                        StreamWriter writer = new StreamWriter(sampFile);
-                        SampleInfo sampInfo = new SampleInfo(fileInfo.Length, sample.waveformPoints);
-                        formatter.Serialize(writer.BaseStream, sampInfo);
-
-                        samples.Add(sample);
-                        
-                    }
-                }
-                Console.WriteLine(count + "/" + files.Count() + " | " + file);
-
-            }
-            loadingWindow.Close();
-
-            return samples.ToArray();
-        }
-        public static bool checkValidity(string file)
-        {
-            bool validFile = true;
-            try { using (AudioFileReader reader = new AudioFileReader(file)) { } } //simple test to see if file will work properly, checks for corrupt or misidentified
-                catch (FormatException)
-                {
-                    Console.WriteLine("invalid file extension found");
-                    validFile = false;
-                }
-            return validFile;
-        }
-        public void updateAllSamples()
-        {
-            allSamples = updateAllSamples(directories.ToArray());
+            await Task.Run(() => allSamples = SampleReference.getAllValidSamplesInDirectories(directories.ToArray()));
             UpdateCurrentSamples("");
         }
+
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string text = (sender as TextBox).Text;
             UpdateCurrentSamples(text);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="query"></param>
         private void UpdateCurrentSamples(string query)
         {
             currentSamples.Clear();
             foreach (SampleReference rf in allSamples)
             {
-                if (rf.fileName.ToUpper().Contains(query.ToUpper())) //uses toUpper to ignore case
+                if (rf.FileName.ToUpper().Contains(query.ToUpper())) //uses toUpper to ignore case
                 {
                     //verify if file is in current dir
                     currentSamples.Add(rf);
@@ -209,7 +124,7 @@ namespace Samplify
                     Math.Abs(position.Y - _startPoint.Y) > SystemParameters.MinimumVerticalDragDistance)
                 {
                     string dataFormat = DataFormats.FileDrop;
-                    string fileLoc = (sampleListView.SelectedItem as SampleReference).filePath;
+                    string fileLoc = (sampleListView.SelectedItem as SampleReference).FilePath;
                     DataObject data = new DataObject(dataFormat, fileLoc);
                     data.SetFileDropList(new StringCollection() { fileLoc });
                     
@@ -252,7 +167,6 @@ namespace Samplify
             }
 
         }
-
         private void folder_Expanded(object sender, RoutedEventArgs e)
         {
             TreeViewItem item = (TreeViewItem)sender;
@@ -284,6 +198,11 @@ namespace Samplify
         private void directoryTreeViewer_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             //update currentSamples to only include if in path
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            updateAllSamples();
         }
     }
 }

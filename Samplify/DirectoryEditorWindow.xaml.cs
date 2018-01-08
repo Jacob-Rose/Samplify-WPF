@@ -31,7 +31,7 @@ namespace Samplify
 
         private void addDirButton_Click(object sender, RoutedEventArgs e)
         {
-            string dir = MainWindow.userSelectDirectoryDialog();
+            string dir = NewroseLib.userSelectDirectoryDialog();
             Activate(); //brings window to foreground after dialog
             if (dir != null)
             {

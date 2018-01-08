@@ -7,9 +7,12 @@ using System.Windows.Media;
 
 namespace Samplify
 {
-    static class UserPreferences
+    public class UserPreferences
     {
-        public static Brush defaultSampleColor = Brushes.Coral;
+        public static Brush defaultSampleColor = Brushes.Cyan;
+        public static Brush baseUIColor = Brushes.Black;
+        public static Brush baseTextColor = Brushes.White;
+        
         public static int waveformPointCount = 128;
     }
 }

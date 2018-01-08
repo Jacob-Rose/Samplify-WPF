@@ -71,7 +71,6 @@
     </Compile>
     <Compile Include="NewroseLib.cs" />
     <Compile Include="PeakToPointConverter.cs" />
-    <Compile Include="SampleInfo.cs" />
     <Compile Include="SampleReference.cs" />
     <Compile Include="UserPreferences.cs" />
     <Compile Include="WaveFormRendererLib\AveragePeakProvider.cs" />

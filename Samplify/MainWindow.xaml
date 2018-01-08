@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:Samplify"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" Closing="Window_Closing">
+        Title="MainWindow" Height="350" Width="525" Closing="Window_Closing"
+        Loaded="Window_Loaded">
     <Window.Resources>
         <local:PeakToPointConverter x:Key="PointConverter"/>
     </Window.Resources>
@@ -22,16 +23,23 @@
                 <RowDefinition Height="20"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Name="editDirectoryButton" Click="editDirectoryButton_Click">
+            <Button Name="editDirectoryButton" 
+                    Click="editDirectoryButton_Click">
                 <TextBlock Text="Edit Directories"/>
             </Button>
-            <TreeView Name="directoryTreeViewer" Grid.Row="1" SelectedItemChanged="directoryTreeViewer_SelectedItemChanged" >
+            <TreeView Name="directoryTreeViewer" 
+                      Grid.Row="1" 
+                      SelectedItemChanged="directoryTreeViewer_SelectedItemChanged" >
 
             </TreeView>
         </Grid>
-        
-        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></GridSplitter>
-        <Grid Name="searchTextBox" Grid.Column="2">
+
+        <GridSplitter Grid.Column="1" 
+                      VerticalAlignment="Stretch" 
+                      HorizontalAlignment="Stretch"/>
+        <Grid Name="searchTextBox" 
+              Grid.Column="2"
+              Background="{Binding Source={x:Static local:UserPreferences.baseUIColor}, Mode=OneWay}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="*" />
@@ -44,21 +52,25 @@
                           PreviewMouseMove="ListViewPreviewMouseMove" 
                           MouseLeftButtonDown="ListViewMouseLeftButtonDown" 
                           VirtualizingPanel.IsVirtualizing="True" 
-                          SelectionChanged="sampleListView_SelectionChanged">
-                <ListView.Template>
+                          SelectionChanged="sampleListView_SelectionChanged"
+                          Background="{Binding Source={x:Static local:UserPreferences.baseUIColor}, Mode=OneWay}">
+                    <ListView.Template>
                     <ControlTemplate>
                             <ItemsPresenter/>
                         </ControlTemplate>
                 </ListView.Template>
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <UniformGrid Columns="3" />
+                            <UniformGrid Columns="2" />
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                     <ListView.ItemTemplate>
                     
                     <DataTemplate>
-                        <Grid Height="100" VerticalAlignment="Stretch" Width="200">
+                        <Grid Height="100" 
+                              VerticalAlignment="Stretch" 
+                              Width="200"
+                              Background="Transparent">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="20"/>
                                 <RowDefinition Height="*"/>
@@ -67,14 +79,22 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Row="0" Text="{Binding Path=fileName}" />
+                            <TextBlock Grid.Row="0" 
+                                       Text="{Binding Path=FileName}" 
+                                       Foreground="{Binding Source={x:Static local:UserPreferences.baseTextColor}, Mode=OneWay}"/>
                             <Grid Grid.Row="0" Grid.Column="1"/>
-                            <Canvas VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="2">
-                                <Polyline Name="samplePolyLineTop" Stroke="{Binding Path=sampleLineBrush}" StrokeThickness="2">
+                            <Canvas VerticalAlignment="Stretch"
+                                    Background="{Binding Source={x:Static local:UserPreferences.baseUIColor}, Mode=OneWay}"
+                                    HorizontalAlignment="Stretch" 
+                                    Grid.Row="1" 
+                                    Grid.ColumnSpan="2">
+                                <Polyline Name="samplePolyLineTop" 
+                                          Stroke="{Binding Path=SampleLineBrush}" 
+                                          StrokeThickness="2">
                                     <Polyline.Points>
                                         <MultiBinding Converter="{StaticResource PointConverter}">
                                             <MultiBinding.Bindings>
-                                                <Binding Path="waveformPoints"/>
+                                                <Binding Path="WaveformPeaks"/>
                                                 <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Canvas}}"/>
                                                 <Binding>
                                                     <Binding.Source>
@@ -85,11 +105,13 @@
                                         </MultiBinding>
                                     </Polyline.Points>
                                 </Polyline>
-                                <Polyline Name="samplePolyLineBottom" Stroke="{Binding Path=sampleLineBrush}" StrokeThickness="2">
+                                <Polyline Name="samplePolyLineBottom" 
+                                          Stroke="{Binding Path=SampleLineBrush}" 
+                                          StrokeThickness="2">
                                     <Polyline.Points>
                                         <MultiBinding Converter="{StaticResource PointConverter}">
                                             <MultiBinding.Bindings>
-                                                <Binding Path="waveformPoints"/>
+                                                <Binding Path="WaveformPeaks"/>
                                                 <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Canvas}}"/>
                                                 <Binding>
                                                     <Binding.Source>
