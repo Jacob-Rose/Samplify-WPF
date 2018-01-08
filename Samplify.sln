@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samplify", "Samplify\Samplify.csproj", "{583E4D01-AF94-46EB-89A7-07F75517AAF1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{583E4D01-AF94-46EB-89A7-07F75517AAF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{583E4D01-AF94-46EB-89A7-07F75517AAF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{583E4D01-AF94-46EB-89A7-07F75517AAF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{583E4D01-AF94-46EB-89A7-07F75517AAF1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {000EAB84-6496-4F0C-8FB5-D051180D6354}
+	EndGlobalSection
+EndGlobal

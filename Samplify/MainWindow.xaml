@@ -1,0 +1,111 @@
+﻿<Window x:Class="Samplify.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Samplify"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525" Closing="Window_Closing">
+    <Window.Resources>
+        <local:PeakToPointConverter x:Key="PointConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition Width="5*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button Name="editDirectoryButton" Click="editDirectoryButton_Click">
+                <TextBlock Text="Edit Directories"/>
+            </Button>
+            <TreeView Name="directoryTreeViewer" Grid.Row="1" SelectedItemChanged="directoryTreeViewer_SelectedItemChanged" >
+
+            </TreeView>
+        </Grid>
+        
+        <GridSplitter Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></GridSplitter>
+        <Grid Name="searchTextBox" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <TextBox Grid.Row="0" TextChanged="SearchTextBox_TextChanged"/>
+            <ScrollViewer Grid.Row="1" >
+                <ListView Name="sampleListView" 
+                          ScrollViewer.CanContentScroll="True"
+                          ScrollViewer.VerticalScrollBarVisibility="Visible" 
+                          PreviewMouseMove="ListViewPreviewMouseMove" 
+                          MouseLeftButtonDown="ListViewMouseLeftButtonDown" 
+                          VirtualizingPanel.IsVirtualizing="True" 
+                          SelectionChanged="sampleListView_SelectionChanged">
+                <ListView.Template>
+                    <ControlTemplate>
+                            <ItemsPresenter/>
+                        </ControlTemplate>
+                </ListView.Template>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3" />
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                    
+                    <DataTemplate>
+                        <Grid Height="100" VerticalAlignment="Stretch" Width="200">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Text="{Binding Path=fileName}" />
+                            <Grid Grid.Row="0" Grid.Column="1"/>
+                            <Canvas VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="2">
+                                <Polyline Name="samplePolyLineTop" Stroke="{Binding Path=sampleLineBrush}" StrokeThickness="2">
+                                    <Polyline.Points>
+                                        <MultiBinding Converter="{StaticResource PointConverter}">
+                                            <MultiBinding.Bindings>
+                                                <Binding Path="waveformPoints"/>
+                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Canvas}}"/>
+                                                <Binding>
+                                                    <Binding.Source>
+                                                        <sys:Double>1</sys:Double>
+                                                    </Binding.Source>
+                                                </Binding>
+                                            </MultiBinding.Bindings>
+                                        </MultiBinding>
+                                    </Polyline.Points>
+                                </Polyline>
+                                <Polyline Name="samplePolyLineBottom" Stroke="{Binding Path=sampleLineBrush}" StrokeThickness="2">
+                                    <Polyline.Points>
+                                        <MultiBinding Converter="{StaticResource PointConverter}">
+                                            <MultiBinding.Bindings>
+                                                <Binding Path="waveformPoints"/>
+                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Canvas}}"/>
+                                                <Binding>
+                                                    <Binding.Source>
+                                                        <sys:Double>-1</sys:Double>
+                                                    </Binding.Source>
+                                                </Binding>
+                                            </MultiBinding.Bindings>
+                                        </MultiBinding>
+                                    </Polyline.Points>
+                                </Polyline>
+                            </Canvas>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Window>
