@@ -15,7 +15,7 @@ namespace Samplify
         public static Brush baseTextColor = Brushes.Black;
         public static Color defaultTagColor = Colors.Yellow;
 
-        public static int waveformPointCount = 100;
+        public static int waveformPointCount = 64;
     }
     public static class SamplifyEngine
     {
@@ -86,9 +86,9 @@ namespace Samplify
         public static void updateAllSamples()
         {
             //await Task.Run(() => allSamples = SampleReference.getAllValidSamplesInDirectories(directories.ToArray()));
+            //await Task.Run(() => UpdateCurrentSamples(""));
             allSamples = SampleReference.getAllValidSamplesInDirectories(directories.ToArray());
             UpdateCurrentSamples("");
-            
         }
 
         public static void UpdateCurrentSamples(string query)

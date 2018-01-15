@@ -64,6 +64,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <local:PeakToPointConverter x:Key="PointConverter"/>
     <DataTemplate x:Key="SampleListView">
         <Grid Height="100" 
                               VerticalAlignment="Stretch" 

@@ -102,16 +102,6 @@
       <DependentUpon>TagCreator.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserPreferences.cs" />
-    <Compile Include="VirtualCanvas\Gestures\AutoScroll.cs" />
-    <Compile Include="VirtualCanvas\Gestures\ExponentialAnimation.cs" />
-    <Compile Include="VirtualCanvas\Gestures\MapZoom.cs" />
-    <Compile Include="VirtualCanvas\Gestures\Pan.cs" />
-    <Compile Include="VirtualCanvas\Gestures\RectangleSelectionGesture.cs" />
-    <Compile Include="VirtualCanvas\Gestures\SelectionRectVisual.cs" />
-    <Compile Include="VirtualCanvas\HlsColor.cs" />
-    <Compile Include="VirtualCanvas\PerfTimer.cs" />
-    <Compile Include="VirtualCanvas\QuadTree.cs" />
-    <Compile Include="VirtualCanvas\VirtualCanvas.cs" />
     <Compile Include="WaveFormRendererLib\AveragePeakProvider.cs" />
     <Compile Include="WaveFormRendererLib\DecibelPeakProvider.cs" />
     <Compile Include="WaveFormRendererLib\IPeakProvider.cs" />
@@ -177,15 +167,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="VirtualCanvas\Gestures\Gestures.zip" />
-    <None Include="VirtualCanvas\TempKey.snk" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="VirtualCanvas\VirtualCanvas.csproj" />
-    <Content Include="VirtualCanvas\VirtualCanvas.sln" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

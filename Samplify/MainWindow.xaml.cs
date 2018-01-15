@@ -28,17 +28,22 @@ namespace Samplify
         public MainWindow()
         {
             SamplifyEngine.loadUserData(); //loads saved directories
+            SamplifyEngine.updateAllSamples();
             InitializeComponent();
 
             sampleListView.ItemsSource = SamplifyEngine.currentSamples;
 
-            SamplifyEngine.updateAllSamples();
-            sampleListView.Items.Refresh();
+            tagListView.ItemsSource = SamplifyEngine.allTags;
             //update listview
             
             
-            resetTreeView();
+            //resetTreeView();
             
+        }
+
+        public void updateListView()
+        {
+            sampleListView.Items.Refresh();
         }
 
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -139,6 +144,7 @@ namespace Samplify
             {
                 SamplifyEngine.createNewTag(c.tagTitle.Text, (Color)c.colorPicker.SelectedColor);
             }
+            tagListView.Items.Refresh();
 
         }
 

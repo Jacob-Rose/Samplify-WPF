@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Samplify"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:controls="clr-namespace:Microsoft.Sample.Controls"
         mc:Ignorable="d"
         Title="Samplify" Height="350" Width="525" Closing="Window_Closing" WindowStyle="ThreeDBorderWindow">
     <Window.Resources>
@@ -80,7 +79,7 @@
                         </ListView.Template>
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <UniformGrid/>
+                                <UniformGrid Columns="2"/>
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
                         
@@ -97,21 +96,21 @@
                     <TextBlock Text="+"/>
                 </Button>
                 <ListView Name="tagListView" Grid.Row="1">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Canvas>
+                                <TextBlock Text="{Binding Path=Name}"/>
+                            </Canvas>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
                     <ListView.Template>
                         <ControlTemplate>
                             <ItemsPresenter/>
                         </ControlTemplate>
                     </ListView.Template>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Canvas Background="{Binding Path=BrushColor}">
-                                <TextBlock Text="{Binding Path=Name}"/>
-                            </Canvas>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <UniformGrid Columns="2" />
+                            <WrapPanel/>
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                 </ListView>
