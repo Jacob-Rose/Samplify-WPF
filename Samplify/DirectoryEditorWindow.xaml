@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Samplify"
         mc:Ignorable="d"
-        Title="DirectoryEditorWindow" Height="300" Width="300">
+        Title="DirectoryEditorWindow" Height="300" Width="300" WindowStyle="ThreeDBorderWindow">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>

@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FontAwesome.Sharp, Version=4.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FontAwesome.Sharp.4.7.1\lib\net40\FontAwesome.Sharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAPICodePack-Core.1.1.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
@@ -45,6 +48,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -57,12 +62,33 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.2.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.2.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.2.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.2.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid, Version=3.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.2.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.2.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.2.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BlendMainWindow.xaml.cs">
+      <DependentUpon>BlendMainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DirectoryEditorWindow.xaml.cs">
       <DependentUpon>DirectoryEditorWindow.xaml</DependentUpon>
     </Compile>
@@ -72,7 +98,20 @@
     <Compile Include="NewroseLib.cs" />
     <Compile Include="PeakToPointConverter.cs" />
     <Compile Include="SampleReference.cs" />
+    <Compile Include="TagCreator.xaml.cs">
+      <DependentUpon>TagCreator.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserPreferences.cs" />
+    <Compile Include="VirtualCanvas\Gestures\AutoScroll.cs" />
+    <Compile Include="VirtualCanvas\Gestures\ExponentialAnimation.cs" />
+    <Compile Include="VirtualCanvas\Gestures\MapZoom.cs" />
+    <Compile Include="VirtualCanvas\Gestures\Pan.cs" />
+    <Compile Include="VirtualCanvas\Gestures\RectangleSelectionGesture.cs" />
+    <Compile Include="VirtualCanvas\Gestures\SelectionRectVisual.cs" />
+    <Compile Include="VirtualCanvas\HlsColor.cs" />
+    <Compile Include="VirtualCanvas\PerfTimer.cs" />
+    <Compile Include="VirtualCanvas\QuadTree.cs" />
+    <Compile Include="VirtualCanvas\VirtualCanvas.cs" />
     <Compile Include="WaveFormRendererLib\AveragePeakProvider.cs" />
     <Compile Include="WaveFormRendererLib\DecibelPeakProvider.cs" />
     <Compile Include="WaveFormRendererLib\IPeakProvider.cs" />
@@ -82,9 +121,10 @@
     <Compile Include="WaveFormRendererLib\PeakProvider.cs" />
     <Compile Include="WaveFormRendererLib\RmsPeakProvider.cs" />
     <Compile Include="WaveFormRendererLib\SamplingPeakProvider.cs" />
-    <Compile Include="WaveFormRendererLib\StandardWaveFormRendererSettings.cs" />
-    <Compile Include="WaveFormRendererLib\WaveFormRenderer.cs" />
-    <Compile Include="WaveFormRendererLib\WaveFormRendererSettings.cs" />
+    <Page Include="BlendMainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DirectoryEditorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -105,6 +145,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ModernUIDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TagCreator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -129,9 +177,15 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="VirtualCanvas\Gestures\Gestures.zip" />
+    <None Include="VirtualCanvas\TempKey.snk" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="VirtualCanvas\VirtualCanvas.csproj" />
+    <Content Include="VirtualCanvas\VirtualCanvas.sln" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

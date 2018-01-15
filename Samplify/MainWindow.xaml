@@ -5,129 +5,117 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Samplify"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:controls="clr-namespace:Microsoft.Sample.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" Closing="Window_Closing"
-        Loaded="Window_Loaded">
+        Title="Samplify" Height="350" Width="525" Closing="Window_Closing" WindowStyle="ThreeDBorderWindow">
     <Window.Resources>
         <local:PeakToPointConverter x:Key="PointConverter"/>
     </Window.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="2"/>
-            <ColumnDefinition Width="5*"/>
-        </Grid.ColumnDefinitions>
+    <Grid Name="mainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="File">
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="20"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Button Name="editDirectoryButton" 
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Refresh Libraries" Click="refreshLibrariesButton_Click">
+
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Preferences">
+
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button Name="editDirectoryButton" 
                     Click="editDirectoryButton_Click">
-                <TextBlock Text="Edit Directories"/>
-            </Button>
-            <TreeView Name="directoryTreeViewer" 
-                      Grid.Row="1" 
-                      SelectedItemChanged="directoryTreeViewer_SelectedItemChanged" >
+                    <TextBlock Text="Edit Directories"/>
+                </Button>
+                <TreeView Name="directoryTreeViewer" 
+                      Grid.Row="1" >
 
-            </TreeView>
-        </Grid>
-
-        <GridSplitter Grid.Column="1" 
+                </TreeView>
+            </Grid>
+            <GridSplitter Grid.Column="1" 
                       VerticalAlignment="Stretch" 
                       HorizontalAlignment="Stretch"/>
-        <Grid Name="searchTextBox" 
+            <Grid Name="searchTextBox" 
               Grid.Column="2"
               Background="{Binding Source={x:Static local:UserPreferences.baseUIColor}, Mode=OneWay}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="20"/>
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <TextBox Grid.Row="0" TextChanged="SearchTextBox_TextChanged"/>
-            <ScrollViewer Grid.Row="1" >
-                <ListView Name="sampleListView" 
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBox Grid.Row="0" TextChanged="SearchTextBox_TextChanged"/>
+                <ScrollViewer Grid.Row="1" >
+                    <ListView Name="sampleListView" 
                           ScrollViewer.CanContentScroll="True"
                           ScrollViewer.VerticalScrollBarVisibility="Visible" 
                           PreviewMouseMove="ListViewPreviewMouseMove" 
                           MouseLeftButtonDown="ListViewMouseLeftButtonDown" 
                           VirtualizingPanel.IsVirtualizing="True" 
-                          SelectionChanged="sampleListView_SelectionChanged"
+                          ItemTemplate="{StaticResource SampleListView}"
                           Background="{Binding Source={x:Static local:UserPreferences.baseUIColor}, Mode=OneWay}">
+                        <ListView.Template>
+                            <ControlTemplate>
+                                <ItemsPresenter/>
+                            </ControlTemplate>
+                        </ListView.Template>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        
+                    </ListView>
+                </ScrollViewer>
+            </Grid>
+            <GridSplitter Grid.Column="3"/>
+            <Grid Grid.Column="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button Name="addTagButton" Click="addTagButton_Click">
+                    <TextBlock Text="+"/>
+                </Button>
+                <ListView Name="tagListView" Grid.Row="1">
                     <ListView.Template>
-                    <ControlTemplate>
+                        <ControlTemplate>
                             <ItemsPresenter/>
                         </ControlTemplate>
-                </ListView.Template>
+                    </ListView.Template>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Canvas Background="{Binding Path=BrushColor}">
+                                <TextBlock Text="{Binding Path=Name}"/>
+                            </Canvas>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <UniformGrid Columns="2" />
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
-                    <ListView.ItemTemplate>
-                    
-                    <DataTemplate>
-                        <Grid Height="100" 
-                              VerticalAlignment="Stretch" 
-                              Width="200"
-                              Background="Transparent">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="20"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Row="0" 
-                                       Text="{Binding Path=FileName}" 
-                                       Foreground="{Binding Source={x:Static local:UserPreferences.baseTextColor}, Mode=OneWay}"/>
-                            <Grid Grid.Row="0" Grid.Column="1"/>
-                            <Canvas VerticalAlignment="Stretch"
-                                    Background="{Binding Source={x:Static local:UserPreferences.baseUIColor}, Mode=OneWay}"
-                                    HorizontalAlignment="Stretch" 
-                                    Grid.Row="1" 
-                                    Grid.ColumnSpan="2">
-                                <Polyline Name="samplePolyLineTop" 
-                                          Stroke="{Binding Path=SampleLineBrush}" 
-                                          StrokeThickness="2">
-                                    <Polyline.Points>
-                                        <MultiBinding Converter="{StaticResource PointConverter}">
-                                            <MultiBinding.Bindings>
-                                                <Binding Path="WaveformPeaks"/>
-                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Canvas}}"/>
-                                                <Binding>
-                                                    <Binding.Source>
-                                                        <sys:Double>1</sys:Double>
-                                                    </Binding.Source>
-                                                </Binding>
-                                            </MultiBinding.Bindings>
-                                        </MultiBinding>
-                                    </Polyline.Points>
-                                </Polyline>
-                                <Polyline Name="samplePolyLineBottom" 
-                                          Stroke="{Binding Path=SampleLineBrush}" 
-                                          StrokeThickness="2">
-                                    <Polyline.Points>
-                                        <MultiBinding Converter="{StaticResource PointConverter}">
-                                            <MultiBinding.Bindings>
-                                                <Binding Path="WaveformPeaks"/>
-                                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Canvas}}"/>
-                                                <Binding>
-                                                    <Binding.Source>
-                                                        <sys:Double>-1</sys:Double>
-                                                    </Binding.Source>
-                                                </Binding>
-                                            </MultiBinding.Bindings>
-                                        </MultiBinding>
-                                    </Polyline.Points>
-                                </Polyline>
-                            </Canvas>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            </ScrollViewer>
+                </ListView>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

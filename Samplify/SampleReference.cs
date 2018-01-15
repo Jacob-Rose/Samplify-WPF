@@ -167,4 +167,18 @@ namespace Samplify
             this.tags = tags;
         }
     }
+
+    [Serializable]
+    public struct Tag
+    {
+        public string Name { get; set; }
+        public Color Color { get; set; }
+
+        public Brush ColorBrush { get { return new SolidColorBrush(Color); } }
+        public Tag(string name, Color color)
+        {
+            Name = name;
+            Color = color;
+        }
+    }
 }

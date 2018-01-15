@@ -1,0 +1,127 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Samplify"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <Style x:Key="WindowsTitleBarButton" TargetType="{x:Type Button}">
+        <Setter Property="MinWidth" Value="20"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                          MinWidth="{TemplateBinding MinWidth}">
+                        <Grid.Background>
+                            <SolidColorBrush x:Name="buttonColor" Color="Gray" Opacity="0.0" />
+                        </Grid.Background>
+                        <ContentPresenter>
+
+                        </ContentPresenter>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="buttonColor" 
+                                                        Storyboard.TargetProperty="Opacity"
+                                                        To="0.5" Duration="0:0:0.25"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="buttonColor" 
+                                                        Storyboard.TargetProperty="Opacity"
+                                                        To="0.0" Duration="0:0:0.25"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="buttonColor" 
+                                                        Storyboard.TargetProperty="Opacity"
+                                                        To="0.8" Duration="0:0:0.25"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="buttonColor" 
+                                                        Storyboard.TargetProperty="Opacity"
+                                                        To="0.5" Duration="0:0:0.25"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <DataTemplate x:Key="SampleListView">
+        <Grid Height="100" 
+                              VerticalAlignment="Stretch" 
+                              Width="200"
+                              Background="Transparent">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" 
+                                       Text="{Binding Path=FileName}" 
+                                       Foreground="{Binding Source={x:Static local:UserPreferences.baseTextColor}, Mode=OneWay}"/>
+            <Grid Grid.Row="0" Grid.Column="1"/>
+            <Canvas VerticalAlignment="Stretch"
+                                    Background="{Binding Source={x:Static local:UserPreferences.baseUIColor}, Mode=OneWay}"
+                                    HorizontalAlignment="Stretch" 
+                                    Grid.Row="1" 
+                                    Grid.ColumnSpan="2">
+                <Polyline Name="samplePolyLineTop" 
+                                          Stroke="{Binding Path=SampleLineBrush}" 
+                                          StrokeThickness="2">
+                    <Polyline.Points>
+                        <MultiBinding Converter="{StaticResource PointConverter}">
+                            <MultiBinding.Bindings>
+                                <Binding Path="WaveformPeaks"/>
+                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Canvas}}"/>
+                                <Binding>
+                                    <Binding.Source>
+                                        <sys:Double>1</sys:Double>
+                                    </Binding.Source>
+                                </Binding>
+                            </MultiBinding.Bindings>
+                        </MultiBinding>
+                    </Polyline.Points>
+                </Polyline>
+                <Polyline Name="samplePolyLineBottom" 
+                                          Stroke="{Binding Path=SampleLineBrush}" 
+                                          StrokeThickness="2">
+                    <Polyline.Points>
+                        <MultiBinding Converter="{StaticResource PointConverter}">
+                            <MultiBinding.Bindings>
+                                <Binding Path="WaveformPeaks"/>
+                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Canvas}}"/>
+                                <Binding>
+                                    <Binding.Source>
+                                        <sys:Double>-1</sys:Double>
+                                    </Binding.Source>
+                                </Binding>
+                            </MultiBinding.Bindings>
+                        </MultiBinding>
+                    </Polyline.Points>
+                </Polyline>
+            </Canvas>
+        </Grid>
+    </DataTemplate>
+
+</ResourceDictionary>

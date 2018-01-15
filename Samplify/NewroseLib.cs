@@ -81,5 +81,23 @@ namespace Samplify
             reader.Close(); //not sure if necessary in a method of this size but just being safe
             return obj;
         }
+
+        public static void deleteSampFilesInDirectories(string[] directories)
+        {
+            foreach(string dir in directories)
+            {
+                deleteSampFilesInDirectory(dir);
+            }
+        }
+
+        public static void deleteSampFilesInDirectory(string directory)
+        {
+            string[] files = Directory.GetFiles(directory, "*.samp", SearchOption.AllDirectories);
+            foreach (string file in files)
+            {
+                Console.WriteLine("Deleted " + file);
+                File.Delete(file);
+            }
+        }
     }
 }
